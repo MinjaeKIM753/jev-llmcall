@@ -1,0 +1,274 @@
+# 모델 카드. 버전 2026-11-02.
+# 표준 단가(USD / 1M tok)는 공급사 문서에서 확인한 값이다. Anthropic, OpenAI,
+# Google 행은 Expellus 서버의 과금표(services/pricing.py)와 같은 숫자다.
+# price 가 null 이면 자동 선택에서 빠진다.
+# long_context_after 를 넘는 요청은 입력·출력 전체가 long_price 로 계산된다.
+# scheduled 는 날짜가 되면 바뀌는 단가다. from 이 지난 마지막 단계가 적용된다.
+# quality 에 없는 과제는 none 이다.
+# 약 은 policy 의 quality_multiplier.weak (2.0) 를 곱한다.
+# image / tools 는 이 세대 대화 모델이 받는다는 전제다. 아니면 false 로 고친다.
+version: "2026-11-02"
+
+providers:
+  anthropic:
+    context_on_listed_5_5: 1000000
+    long_context_price: not_listed
+    thinking: adaptive
+  openai:
+    context_on_listed_gpt6: 1050000
+    long_context_price: not_in_this_version
+  xai:
+    context: 500000
+    long_context_price: doubles_after_200k_on_4_7_and_4_6
+    image: input_only
+  google:
+    argon_price: introductory_until_2026-11-30
+    flash_price: introductory_until_2026-12-31
+
+models:
+  - id: claude-fable-5-1
+    vendor: anthropic
+    tier: frontier
+    context: 1000000
+    price_in: 10
+    price_out: 50
+    efforts: [low, medium, high, xhigh, max]
+    image: true
+    tools: true
+    quality:
+      writing: strong
+      document: strong
+      research: strong
+      code: strong
+      hard: strong
+      data: adequate
+      quick: adequate
+
+  - id: claude-opus-5-5
+    vendor: anthropic
+    tier: premium
+    context: 1000000
+    price_in: 4
+    price_out: 20
+    efforts: [low, medium, high, xhigh]
+    image: true
+    tools: true
+    quality:
+      writing: adequate
+      document: adequate
+      research: adequate
+      quick: adequate
+      code: strong
+      hard: strong
+
+  - id: claude-sonnet-5-5
+    vendor: anthropic
+    tier: standard
+    context: 1000000
+    price_in: 2
+    price_out: 10
+    efforts: [low, medium, high, xhigh]
+    image: true
+    tools: true
+    quality:
+      writing: adequate
+      document: adequate
+      research: adequate
+      hard: adequate
+      code: strong
+
+  - id: claude-haiku-5-5
+    vendor: anthropic
+    tier: economy
+    context: 1000000
+    price_in: 0.10
+    price_out: 0.50
+    long_context_after: 100000
+    long_price_in: 0.50
+    long_price_out: 2.50
+    efforts: [low, medium, high]
+    image: true
+    tools: true
+    quality:
+      quick: strong
+      writing: adequate
+
+  - id: gpt-6-astra
+    vendor: openai
+    tier: frontier
+    context: 1050000
+    price_in: 10
+    price_out: 50
+    long_context_after: 272000
+    long_price_in: 20
+    long_price_out: 75
+    efforts: [low, medium, high, xhigh, max]
+    image: true
+    tools: true
+    quality:
+      code: strong
+      hard: strong
+      research: strong
+      data: strong
+      writing: adequate
+      document: adequate
+
+  - id: gpt-6.1-sol
+    vendor: openai
+    tier: premium
+    context: 1050000
+    price_in: 2
+    price_out: 10
+    long_context_after: 272000
+    long_price_in: 4
+    long_price_out: 15
+    efforts: [low, medium, high, xhigh]
+    image: true
+    tools: true
+    quality:
+      code: adequate
+      hard: adequate
+      research: adequate
+
+  - id: gpt-6-sol
+    vendor: openai
+    tier: standard
+    context: 1050000
+    price_in: 2
+    price_out: 10
+    long_context_after: 272000
+    long_price_in: 4
+    long_price_out: 15
+    efforts: [low, medium, high, xhigh]
+    image: true
+    tools: true
+    quality:
+      code: adequate
+      writing: adequate
+      research: adequate
+
+  - id: gpt-6-luna
+    vendor: openai
+    tier: economy
+    context: 1050000
+    price_in: 0.10
+    price_out: 0.50
+    long_context_after: 272000
+    long_price_in: 0.20
+    long_price_out: 0.75
+    efforts: [low, medium, high]
+    image: true
+    tools: true
+    quality:
+      quick: strong
+      writing: adequate
+      code: adequate
+
+  # 20만 토큰 초과 단가는 xAI 릴리스 노트의 2배 구간이다.
+  # code, hard 가 약인 근거는 docs/policy.md 의 Terminal-Bench 절.
+  - id: grok-4.7
+    vendor: xai
+    tier: premium
+    context: 500000
+    price_in: 2
+    price_out: 6
+    long_context_after: 200000
+    long_price_in: 4
+    long_price_out: 12
+    efforts: [low, medium, high, xhigh]
+    image: true
+    tools: true
+    quality:
+      code: weak
+      hard: adequate
+
+  - id: grok-4.6
+    vendor: xai
+    tier: standard
+    context: 500000
+    price_in: 2
+    price_out: 6
+    long_context_after: 200000
+    long_price_in: 4
+    long_price_out: 12
+    efforts: [low, medium, high, xhigh]
+    image: true
+    tools: true
+    quality:
+      code: adequate
+      research: adequate
+
+  - id: grok-4.5
+    vendor: xai
+    tier: standard
+    context: 500000
+    price_in: 2
+    price_out: 6
+    efforts: [low, medium, high]
+    image: true
+    tools: true
+    quality:
+      code: adequate
+      writing: adequate
+
+  # 출시 할인가. 2026-12-01부터 $4 / $20. 맥락 구간 없음.
+  - id: gemini-3.1-pro-preview
+    vendor: google
+    tier: premium
+    context: 1000000
+    price_in: 2
+    price_out: 12
+    efforts: [low, medium, high]
+    image: true
+    tools: true
+    quality:
+      writing: adequate
+      document: adequate
+      research: adequate
+      hard: adequate
+
+  - id: gemini-4-argon
+    vendor: google
+    tier: premium
+    context: 1000000
+    price_in: 2
+    price_out: 10
+    scheduled:
+      - {from: "2026-12-01", price_in: 4, price_out: 20}
+    efforts: [low, medium, high]
+    image: true
+    tools: true
+    quality:
+      code: adequate
+      hard: adequate
+      research: adequate
+
+  # 출시 할인가. 2027-01-01부터 $1.50 / $7.50.
+  - id: gemini-3.8-flash
+    vendor: google
+    tier: standard
+    context: 1000000
+    price_in: 0.75
+    price_out: 3.75
+    scheduled:
+      - {from: "2027-01-01", price_in: 1.5, price_out: 7.5}
+    efforts: [low, medium, high]
+    image: true
+    tools: true
+    quality:
+      quick: adequate
+      writing: adequate
+      research: adequate
+      data: adequate
+
+  - id: gemini-3.5-flash-lite
+    vendor: google
+    tier: economy
+    context: 1000000
+    price_in: 0.30
+    price_out: 2.50
+    efforts: [low, medium, high]
+    image: true
+    tools: true
+    quality:
+      quick: strong

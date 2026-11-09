@@ -1,0 +1,16 @@
+.env
+.env.example
+*.pem
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+dist/
+build/
+*.egg-info/
+docs/
+samples/
+tests/
+benchmarks/
+guide.html
+report.html

@@ -1,0 +1,65 @@
+# 2026-10-22
+# 숫자가 어긋나면 이 파일이 이긴다.
+version: "2026-10-22"
+jev_model: jev-1.13.0
+
+limits:
+  timeout_ms: 800
+  max_state_chars: 1500
+  task_confidence_floor: 0.7
+  tie_relative: 0.10
+
+# 이용자 발화마다 한 번. 같은 턴의 도구 결과는 호출자가 select를 다시 부르지 않는다.
+decide_on: user_message
+
+output_token_guess:
+  short: 400
+  medium: 2000
+  long: 8000
+
+# 난이도, 실수 비용, 낮은 과제 확신 중 하나면 economy를 뺀다.
+exclude_economy:
+  min_difficulty: 2.0
+  min_stakes: 0.7
+
+# 카드 quality 에 그 과제가 없거나 none 이면 후보가 아니다.
+require_quality: true
+
+# 약은 목록 금액에 이 배수를 곱한다. 강과 보통은 1.
+# 2.0 = 첫 시도 성공을 절반으로 보고, 재시도를 포함한 기대 금액을 두 배로 둔다.
+quality_multiplier:
+  strong: 1
+  adequate: 1
+  weak: 2.0
+
+# 요구가 높아질 때만 모델을 바꾼다. 순위가 같거나 낮으면 previous_model을 유지한다.
+demand_rank:
+  quick: 0
+  writing: 1
+  research: 1
+  data: 2
+  document: 2
+  code: 2
+  hard: 3
+sticky_downgrade: false
+
+# 시간 초과나 Jev 오류. economy가 아닌 카드의 최저 보정가, 추론 단계는 medium.
+fallback:
+  tier_floor: standard
+  reasoning_effort: medium
+  reason: jev_unavailable
+
+reasoning_from_difficulty:
+  - max_score: 0.5
+    effort: low
+  - max_score: 1.5
+    effort: medium
+  - max_score: 2.5
+    effort: high
+
+# 난이도가 위 구간의 마지막보다 높고 실수 비용이 이 값 이상이면 카드의 마지막 단계.
+stakes_unlocks_top: 0.7
+
+# 상대 차이가 tie_relative 미만일 때의 순서.
+# 보정 배수가 작은 쪽, 강이 보통보다 앞, 맥락이 긴 쪽, id 오름차순.
+tie_break: [quality_multiplier_asc, quality_desc, context_desc, id_asc]

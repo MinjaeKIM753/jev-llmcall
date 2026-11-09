@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "jev-llmcall"
+version = "0.1.0"
+description = "Pick a model id and reasoning effort from an allowlist using Jev and a local price policy."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { file = "LICENSE" }
+dependencies = ["PyYAML>=6"]
+
+[project.scripts]
+jev-llmcall = "jev_llmcall.__main__:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["jev_llmcall*"]
