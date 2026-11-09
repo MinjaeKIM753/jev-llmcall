@@ -24,7 +24,7 @@ The model choice used to be its own chat call.
 
 | | Time | Jev's bill |
 |---|---|---|
-| Classifier it replaced | up to 6 s | a chat model, input and output |
+| Chat classifier | up to 6 s | a chat model, input and output |
 | Jev | 0.2 s, cap 0.8 s | $0.042 / 1M input tokens, output $0 |
 | Same-turn tool result | no call | $0 |
 
