@@ -1,14 +1,16 @@
 # jev-llmcall
 
-![jev-llmcall](header.png)
+<p align="center">
+  <img src="header.png" alt="jev-llmcall" width="640">
+</p>
 
-You hand it a sentence and the models you allow. It hands back one model id and a reasoning effort.
+<p align="center">You hand it a sentence and the models you allow. It hands back one model id and a reasoning effort.</p>
 
 ## What it is
 
 | You bring | You get back |
 |---|---|
-| A TypeSafe key | `model_id` |
+| A TypesafeAI key | `model_id` |
 | The user's sentence, cut at 1,500 characters | `reasoning_effort` |
 | Model ids you are willing to call | Estimated price of that card |
 
